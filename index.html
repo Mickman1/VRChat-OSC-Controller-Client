@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<title>VRChat OSC Thought Bubble</title>
+	
+	<link rel='stylesheet' href='style.css'>
+</head>
+
+<body>
+	<input type='text' id='messageBox' placeholder='Enter VRChat Message'>
+	<button id='sendBtn' onclick='pressSend()'>Send!</button>
+</body>
+
+<script defer>
+	var ws = new WebSocket('wss://mickbot.com/ws')
+
+	document.getElementById('messageBox').addEventListener('keydown', function(event) {
+		if (event.key === 'Enter') {
+			pressSend(event)
+		}
+	})
+
+	function pressSend(event) {
+		if (document.getElementById('messageBox').value !== '') {
+			sendMessage()
+		}
+	}
+
+	function sendMessage() {
+		const message = document.getElementById('messageBox').value
+		ws.send(message)
+
+		document.getElementById('messageBox').value = ''
+	}
+</script>
+</html>
