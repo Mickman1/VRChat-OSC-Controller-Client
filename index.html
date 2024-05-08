@@ -8,9 +8,9 @@
 	<link rel='stylesheet' href='style.css'>
 </head>
 
-<body>
 	<input type='text' id='messageBox' placeholder='Enter VRChat Message'>
 	<button id='sendBtn' onclick='pressSend()'>Send!</button>
+<body onblur='checkWebSocketConnection()' onfocus='checkWebSocketConnection()'>
 </body>
 
 <script defer>
@@ -33,6 +33,13 @@
 		ws.send(message)
 
 		document.getElementById('messageBox').value = ''
+	}
+	function checkWebSocketConnection() {
+		if (ws.readyState !== WebSocket.OPEN) {
+			ws = new WebSocket('wss://mickbot.com/ws')
+
+			console.log('WebSocket was CLOSED, re-opening...')
+		}
 	}
 </script>
 </html>
