@@ -43,110 +43,53 @@
 
 		let wsMessage = ''
 
-		switch(event.code) {
-			case 'KeyW':
-				if (!keyStates.forward) {
-					wsMessage = 'keyDownForward'
-					keyStates.forward = true
-				}
-				break
-			case 'KeyS':
-				if (!keyStates.backward) {
-					wsMessage = 'keyDownBackward'
-					keyStates.backward = true
-				}
-				break
-			case 'KeyA':
-				if (!keyStates.left) {
-					wsMessage = 'keyDownLeft'
-					keyStates.left = true
-				}
-				break
-			case 'KeyD':
-				if (!keyStates.right) {
-					wsMessage = 'keyDownRight'
-					keyStates.right = true
-				}
-				break
-			case 'ShiftLeft':
-				if (!keyStates.sprint) {
-					wsMessage = 'keyDownSprint'
-					keyStates.sprint = true
-				}
-				break
-			case 'Space':
-				if (!keyStates.jump) {
-					wsMessage = 'keyDownJump'
-					keyStates.jump = true
-				}
-				break
-			case 'KeyC':
-				if (!keyStates.crouch) {
-					wsMessage = 'keyDownCrouch'
-					keyStates.crouch = true
-				}
-				break
-			case 'KeyZ':
-				if (!keyStates.prone) {
-					wsMessage = 'keyDownProne'
-					keyStates.prone = true
-				}
-				break
-			default:
-				return;
-		}
+		const inputMap = {
+			KeyW: { message: 'keyDownForward', state: 'forward' },
+			KeyS: { message: 'keyDownBackward', state: 'backward' },
+			KeyA: { message: 'keyDownLeft', state: 'left' },
+			KeyD: { message: 'keyDownRight', state: 'right' },
+			ShiftLeft: { message: 'keyDownSprint', state: 'sprint' },
+			Space: { message: 'keyDownJump', state: 'jump' },
+			KeyC: { message: 'keyDownCrouch', state: 'crouch' },
+			KeyZ: { message: 'keyDownProne', state: 'prone' },
+			KeyV: { message: 'keyDownVoice', state: 'voice' },
+			ArrowLeft: { message: 'keyDownLookLeft', state: 'lookLeft' },
+			ArrowRight: { message: 'keyDownLookRight', state: 'lookRight' },
+		};
 
-		if (wsMessage === '')
+		if (inputMap[event.code] && keyStates[inputMap[event.code].state] === false) {
+			wsMessage = inputMap[event.code].message
+			keyStates[inputMap[event.code].state] = true
+		}
+		else
 			return;
 
 		ws.send(JSON.stringify({ message: wsMessage, type: 'input' }))
-		console.log(1)
 	})
 
 	document.addEventListener('keyup', function(event) {
 		if (document.activeElement === document.getElementById('messageBox'))
 			return;
 
-		let wsMessage = ''
-
-		switch(event.code) {
-			case 'KeyW':
-				wsMessage = 'keyUpForward'
-				keyStates.forward = false
-				break
-			case 'KeyS':
-				wsMessage = 'keyUpBackward'
-				keyStates.backward = false
-				break
-			case 'KeyA':
-				wsMessage = 'keyUpLeft'
-				keyStates.left = false
-				break
-			case 'KeyD':
-				wsMessage = 'keyUpRight'
-				keyStates.right = false
-				break
-			case 'ShiftLeft':
-				wsMessage = 'keyUpSprint'
-				keyStates.sprint = false
-				break
-			case 'Space':
-				wsMessage = 'keyUpJump'
-				keyStates.jump = false
-				break
-			case 'KeyC':
-				wsMessage = 'keyUpCrouch'
-				keyStates.crouch = false
-				break
-			case 'KeyZ':
-				wsMessage = 'keyUpProne'
-				keyStates.prone = false
-				break
-			default:
-				return;
+		const inputMap = {
+			KeyW: { message: 'keyUpForward', state: 'forward' },
+			KeyS: { message: 'keyUpBackward', state: 'backward' },
+			KeyA: { message: 'keyUpLeft', state: 'left' },
+			KeyD: { message: 'keyUpRight', state: 'right' },
+			ShiftLeft: { message: 'keyUpSprint', state: 'sprint' },
+			Space: { message: 'keyUpJump', state: 'jump' },
+			KeyC: { message: 'keyUpCrouch', state: 'crouch' },
+			KeyZ: { message: 'keyUpProne', state: 'prone' },
+			KeyV: { message: 'keyUpVoice', state: 'voice' },
+			ArrowLeft: { message: 'keyUpLookLeft', state: 'lookLeft' },
+			ArrowRight: { message: 'keyUpLookRight', state: 'lookRight' },
 		}
 
-		if (wsMessage === '')
+		if (inputMap[event.code]) {
+			wsMessage = inputMap[event.code].message
+			keyStates[inputMap[event.code].state] = false
+		}
+		else
 			return;
 
 		ws.send(JSON.stringify({ message: wsMessage, type: 'input' }))
@@ -160,23 +103,6 @@
 		ws.send(JSON.stringify({ message: message, type: 'chatbox' }))
 
 		document.getElementById('messageBox').value = ''
-	}
-
-	function keydown(key) {
-		ws.send(key)
-	}
-
-	function forward() {
-		ws.send('forward')
-	}
-	function backward() {
-		ws.send('backward')
-	}
-	function left() {
-		ws.send('left')
-	}
-	function right() {
-		ws.send('right')
 	}
 
 	function checkWebSocketConnection() {
