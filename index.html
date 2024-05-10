@@ -28,6 +28,34 @@
 		lookLeft: false,
 		lookRight: false,
 	}
+	
+	const keyDownInputMap = {
+		KeyW: 			{ input: 'keyDownForward', 		state: 'forward' },
+		KeyS: 			{ input: 'keyDownBackward', 	state: 'backward' },
+		KeyA: 			{ input: 'keyDownLeft', 			state: 'left'},
+		KeyD: 			{ input: 'keyDownRight', 			state: 'right' },
+		ShiftLeft: 	{ input: 'keyDownSprint', 		state: 'sprint' },
+		Space: 			{ input: 'keyDownJump', 			state: 'jump' },
+		KeyC: 			{ input: 'keyDownCrouch', 		state: 'crouch' },
+		KeyZ: 			{ input: 'keyDownProne', 			state: 'prone' },
+		KeyV: 			{ input: 'keyDownVoice', 			state: 'voice' },
+		ArrowLeft: 	{ input: 'keyDownLookLeft', 	state: 'lookLeft' },
+		ArrowRight: { input: 'keyDownLookRight', 	state: 'lookRight' },
+	}
+	
+	const keyUpInputMap = {
+		KeyW: 			{ input: 'keyUpForward', 			state: 'forward' },
+		KeyS: 			{ input: 'keyUpBackward', 		state: 'backward' },
+		KeyA: 			{ input: 'keyUpLeft', 				state: 'left' },
+		KeyD: 			{ input: 'keyUpRight', 				state: 'right' },
+		ShiftLeft: 	{ input: 'keyUpSprint', 			state: 'sprint' },
+		Space: 			{ input: 'keyUpJump', 				state: 'jump' },
+		KeyC: 			{ input: 'keyUpCrouch', 			state: 'crouch' },
+		KeyZ: 			{ input: 'keyUpProne', 				state: 'prone' },
+		KeyV: 			{ input: 'keyUpVoice', 				state: 'voice' },
+		ArrowLeft: 	{ input: 'keyUpLookLeft', 		state: 'lookLeft' },
+		ArrowRight: { input: 'keyUpLookRight', 		state: 'lookRight' },
+	}
 
 	var ws = new WebSocket('wss://mickbot.com/ws')
 
@@ -41,58 +69,24 @@
 		if (document.activeElement === document.getElementById('messageBox'))
 			return;
 
-		let wsMessage = ''
+		if (keyDownInputMap[event.code] && keyStates[keyDownInputMap[event.code].state] === false) {
+			let message = keyDownInputMap[event.code].input
+			keyStates[keyDownInputMap[event.code].state] = true
 
-		const inputMap = {
-			KeyW: { message: 'keyDownForward', state: 'forward' },
-			KeyS: { message: 'keyDownBackward', state: 'backward' },
-			KeyA: { message: 'keyDownLeft', state: 'left' },
-			KeyD: { message: 'keyDownRight', state: 'right' },
-			ShiftLeft: { message: 'keyDownSprint', state: 'sprint' },
-			Space: { message: 'keyDownJump', state: 'jump' },
-			KeyC: { message: 'keyDownCrouch', state: 'crouch' },
-			KeyZ: { message: 'keyDownProne', state: 'prone' },
-			KeyV: { message: 'keyDownVoice', state: 'voice' },
-			ArrowLeft: { message: 'keyDownLookLeft', state: 'lookLeft' },
-			ArrowRight: { message: 'keyDownLookRight', state: 'lookRight' },
-		};
-
-		if (inputMap[event.code] && keyStates[inputMap[event.code].state] === false) {
-			wsMessage = inputMap[event.code].message
-			keyStates[inputMap[event.code].state] = true
+			ws.send(JSON.stringify({ message: message, type: 'input', state: 'down' }))
 		}
-		else
-			return;
-
-		ws.send(JSON.stringify({ message: wsMessage, type: 'input' }))
 	})
 
 	document.addEventListener('keyup', function(event) {
 		if (document.activeElement === document.getElementById('messageBox'))
 			return;
 
-		const inputMap = {
-			KeyW: { message: 'keyUpForward', state: 'forward' },
-			KeyS: { message: 'keyUpBackward', state: 'backward' },
-			KeyA: { message: 'keyUpLeft', state: 'left' },
-			KeyD: { message: 'keyUpRight', state: 'right' },
-			ShiftLeft: { message: 'keyUpSprint', state: 'sprint' },
-			Space: { message: 'keyUpJump', state: 'jump' },
-			KeyC: { message: 'keyUpCrouch', state: 'crouch' },
-			KeyZ: { message: 'keyUpProne', state: 'prone' },
-			KeyV: { message: 'keyUpVoice', state: 'voice' },
-			ArrowLeft: { message: 'keyUpLookLeft', state: 'lookLeft' },
-			ArrowRight: { message: 'keyUpLookRight', state: 'lookRight' },
+		if (keyUpInputMap[event.code] && keyStates[keyUpInputMap[event.code].state] === true) {
+			let message = keyUpInputMap[event.code].input
+			keyStates[keyUpInputMap[event.code].state] = false
+			
+			ws.send(JSON.stringify({ message: message, type: 'input', state: 'up' }))
 		}
-
-		if (inputMap[event.code]) {
-			wsMessage = inputMap[event.code].message
-			keyStates[inputMap[event.code].state] = false
-		}
-		else
-			return;
-
-		ws.send(JSON.stringify({ message: wsMessage, type: 'input' }))
 	})
 
 	function sendChatboxMessage() {
