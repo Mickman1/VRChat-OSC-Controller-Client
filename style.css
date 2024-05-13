@@ -1,1 +1,7 @@
- 
+#joystick {
+	position: absolute;
+	top: 0px;
+	width: 600px;
+	height: 400px;
+	outline: auto;
+}
