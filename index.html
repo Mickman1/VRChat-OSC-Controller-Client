@@ -29,49 +29,47 @@
 		var manager = nipplejs.create(options)
 		var inter
 		manager.on('move', (evt, data) => {
+			console.log(data.angle.degree)
 
-			/*console.log(data.angle.degree)
+			let degreeAdjusted = data.angle.degree
 
-			if (data.angle.degree > 340 && data.angle.degree < 20) {
+			if (degreeAdjusted < 110 && degreeAdjusted > 70) {
+				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
+				
+				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			}
+
+			else if (degreeAdjusted < 290 && degreeAdjusted > 250) {
+				ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
+				
+				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			}
+
+			else if (degreeAdjusted < 200 && degreeAdjusted > 160) {
+				ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
+
+				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			}
+
+			else if ((degreeAdjusted < 360 && degreeAdjusted > 340) || (degreeAdjusted < 20 && degreeAdjusted >= 0)) {
 				ws.send(JSON.stringify({ message: 'keyDownRight', type: 'input', state: 'down' }))
+
 				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
 				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
 				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
 			}
-			if (data.angle.degree < 110 && data.angle.degree > 70) {
-				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
+
+			else {
+				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
 				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
 				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
 				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-			}*/
-
-			if (data.direction) {
-				switch (data.direction.angle) {
-					case 'up':
-						ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
-						ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-						break
-					case 'down':
-						ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
-						ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-						break
-					case 'left':
-						ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
-						ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-						break
-					case 'right':
-						ws.send(JSON.stringify({ message: 'keyDownRight', type: 'input', state: 'down' }))
-						ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-						ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-						break
-				}
 			}
 		})
 		manager.on('end', (evt, data) => {
