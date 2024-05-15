@@ -8,6 +8,7 @@ const joystickStates = {
 const options = {
 	zone: document.getElementById('joystick-div'),
 	color: 'red',
+	size: 150,
 }
 const manager = nipplejs.create(options)
 
