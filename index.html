@@ -25,73 +25,72 @@
 		var manager = nipplejs.create(options)
 		manager.on('move', (evt, data) => {
 			if (data.distance < 10) {
-				return
+				ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
+
+				return;
+			}
+
+			if (data.distance > 40) {
+				ws.send(JSON.stringify({ message: 'keyDownSprint', type: 'input', state: 'down' }))
+			}
+			else {
+				ws.send(JSON.stringify({ message: 'keyUpSprint', type: 'input', state: 'up' }))
 			}
 			
-
 			let degree = data.angle.degree
 
 			if (degree < 145 && degree > 35) {
 				keyStates.forward = true
-				keyStates.backward = false
 				
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
 			}
+			else
+				keyStates.forward = false
 
 			if (degree < 325 && degree > 215) {
 				keyStates.backward = true
-				keyStates.forward = false
 				
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
 			}
+			else
+				keyStates.backward = false
 
 			if (degree < 235 && degree > 125) {
 				keyStates.left = true
-				keyStates.right = false
 
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+				ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
 			}
+			else
+				keyStates.left = false
 
 			if ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0)) {
 				keyStates.right = true
-				keyStates.left = false
 
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-			}
-
-			if (keyStates.forward) {
-				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
-			}
-			if (keyStates.backward) {
-				ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
-			}
-			if (keyStates.left) {
-				ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
-			}
-			if (keyStates.right) {
 				ws.send(JSON.stringify({ message: 'keyDownRight', type: 'input', state: 'down' }))
 			}
-			
-			console.log(keyStates)
-			
-			keyStates.forward = false
-			keyStates.backward = false
-			keyStates.left = false
-			keyStates.right = false
+			else
+				keyStates.right = false
+
+			if (!keyStates.forward) {
+				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
+			}
+			if (!keyStates.backward) {
+				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
+			}
+			if (!keyStates.left) {
+				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
+			}
+			if (!keyStates.right) {
+				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			}
 		})
 		manager.on('end', (evt, data) => {
-			ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-			ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-			ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-			ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
 
 			keyStates.forward = false
 			keyStates.backward = false
 			keyStates.left = false
 			keyStates.right = false
-
-			clearInterval(inter)
-			console.log(data)
 		})
 	</script>
 
