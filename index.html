@@ -7,7 +7,8 @@
 	<title>VRChat OSC Controller</title>
 
 	<link rel='stylesheet' href='style.css'>
-	<script src='js/nipplejs.js'></script>
+	<script src='js/nipplejs.js' defer></script>
+	<script src='js/joystick.js' defer></script>
 </head>
 
 <body onblur='checkWebSocketConnection()' onfocus='checkWebSocketConnection()'>
@@ -17,83 +18,6 @@
 	
 	<div id='joystick-div'></div>
 </body>
-
-	<script id='joystick'>
-		var options = {
-			zone: document.getElementById('joystick-div'),
-			color: 'red',   
-		}
-		var manager = nipplejs.create(options)
-		manager.on('move', (evt, data) => {
-			if (data.distance < 10) {
-				ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
-
-				return;
-			}
-
-			if (data.distance > 40) {
-				ws.send(JSON.stringify({ message: 'keyDownSprint', type: 'input', state: 'down' }))
-			}
-			else {
-				ws.send(JSON.stringify({ message: 'keyUpSprint', type: 'input', state: 'up' }))
-			}
-			
-			let degree = data.angle.degree
-
-			if (degree < 145 && degree > 35) {
-				keyStates.forward = true
-				
-				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
-			}
-			else
-				keyStates.forward = false
-
-			if (degree < 325 && degree > 215) {
-				keyStates.backward = true
-				
-				ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
-			}
-			else
-				keyStates.backward = false
-
-			if (degree < 235 && degree > 125) {
-				keyStates.left = true
-
-				ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
-			}
-			else
-				keyStates.left = false
-
-			if ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0)) {
-				keyStates.right = true
-
-				ws.send(JSON.stringify({ message: 'keyDownRight', type: 'input', state: 'down' }))
-			}
-			else
-				keyStates.right = false
-
-			if (!keyStates.forward) {
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-			}
-			if (!keyStates.backward) {
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-			}
-			if (!keyStates.left) {
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-			}
-			if (!keyStates.right) {
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-			}
-		})
-		manager.on('end', (evt, data) => {
-			ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
-
-			keyStates.forward = false
-			keyStates.backward = false
-			keyStates.left = false
-			keyStates.right = false
-		})
-	</script>
 
 <script defer>
 	const keyStates = {
