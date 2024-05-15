@@ -11,23 +11,18 @@
 
 <body onblur='checkWebSocketConnection()' onfocus='checkWebSocketConnection()'>
 	<div></div>
-	<input type='text' id='messageBox' placeholder='Enter message'>
-	<button id='sendBtn' onclick='sendChatboxMessage()'>Send!</button>
+	<input type='text' id='message-box' placeholder='Enter message'>
+	<button id='send-btn' onclick='sendChatboxMessage()'>Send</button>
 	
-	<div id='joystick'></div>
-	<div class='nipple'>
-		<div class='front'></div>
-		<div class='back'></div>
-	</div>
+	<div id='joystick-div'></div>
 </body>
 
-	<script id='joystickInit'>
+	<script id='joystick'>
 		var options = {
-			zone: document.getElementById('joystick'),
+			zone: document.getElementById('joystick-div'),
 			color: 'red',   
 		}
 		var manager = nipplejs.create(options)
-		var inter
 		manager.on('move', (evt, data) => {
 			if (data.distance < 10) {
 				return
@@ -145,14 +140,14 @@
 
 	var ws = new WebSocket('wss://mickbot.com/ws')
 
-	document.getElementById('messageBox').addEventListener('keydown', function(event) {
+	document.getElementById('message-box').addEventListener('keydown', function(event) {
 		if (event.code === 'Enter') {
 			sendChatboxMessage(event)
 		}
 	})
 
 	document.addEventListener('keydown', function(event) {
-		if (document.activeElement === document.getElementById('messageBox'))
+		if (document.activeElement === document.getElementById('message-box'))
 			return;
 
 		if (keyDownInputMap[event.code] && keyStates[keyDownInputMap[event.code].state] === false) {
@@ -164,7 +159,7 @@
 	})
 
 	document.addEventListener('keyup', function(event) {
-		if (document.activeElement === document.getElementById('messageBox'))
+		if (document.activeElement === document.getElementById('message-box'))
 			return;
 
 		if (keyUpInputMap[event.code] && keyStates[keyUpInputMap[event.code].state] === true) {
@@ -176,13 +171,13 @@
 	})
 
 	function sendChatboxMessage() {
-		if (document.getElementById('messageBox').value === '') 
+		if (document.getElementById('message-box').value === '') 
 			return;
 
-		const message = document.getElementById('messageBox').value
+		const message = document.getElementById('message-box').value
 		ws.send(JSON.stringify({ message: message, type: 'chatbox' }))
 
-		document.getElementById('messageBox').value = ''
+		document.getElementById('message-box').value = ''
 	}
 
 	function checkWebSocketConnection() {

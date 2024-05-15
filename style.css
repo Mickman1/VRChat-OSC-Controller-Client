@@ -1,6 +1,6 @@
-#joystick {
+#joystick-div {
 	position: absolute;
-	top: 0px;
+	top: 40px;
 	width: 600px;
 	height: 400px;
 	outline: auto;
