@@ -29,54 +29,72 @@
 		var manager = nipplejs.create(options)
 		var inter
 		manager.on('move', (evt, data) => {
-			console.log(data.angle.degree)
+			if (data.distance < 10) {
+				return
+			}
+			
 
-			let degreeAdjusted = data.angle.degree
+			let degree = data.angle.degree
 
-			if (degreeAdjusted < 110 && degreeAdjusted > 70) {
+			if (degree < 145 && degree > 35) {
+				keyStates.forward = true
+				keyStates.backward = false
+				
+				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
+			}
+
+			if (degree < 325 && degree > 215) {
+				keyStates.backward = true
+				keyStates.forward = false
+				
+				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
+			}
+
+			if (degree < 235 && degree > 125) {
+				keyStates.left = true
+				keyStates.right = false
+
+				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+			}
+
+			if ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0)) {
+				keyStates.right = true
+				keyStates.left = false
+
+				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
+			}
+
+			if (keyStates.forward) {
 				ws.send(JSON.stringify({ message: 'keyDownForward', type: 'input', state: 'down' }))
-				
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
 			}
-
-			else if (degreeAdjusted < 290 && degreeAdjusted > 250) {
+			if (keyStates.backward) {
 				ws.send(JSON.stringify({ message: 'keyDownBackward', type: 'input', state: 'down' }))
-				
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
 			}
-
-			else if (degreeAdjusted < 200 && degreeAdjusted > 160) {
+			if (keyStates.left) {
 				ws.send(JSON.stringify({ message: 'keyDownLeft', type: 'input', state: 'down' }))
-
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
 			}
-
-			else if ((degreeAdjusted < 360 && degreeAdjusted > 340) || (degreeAdjusted < 20 && degreeAdjusted >= 0)) {
+			if (keyStates.right) {
 				ws.send(JSON.stringify({ message: 'keyDownRight', type: 'input', state: 'down' }))
-
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
 			}
-
-			else {
-				ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
-				ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
-			}
+			
+			console.log(keyStates)
+			
+			keyStates.forward = false
+			keyStates.backward = false
+			keyStates.left = false
+			keyStates.right = false
 		})
 		manager.on('end', (evt, data) => {
 			ws.send(JSON.stringify({ message: 'keyUpForward', type: 'input', state: 'up' }))
 			ws.send(JSON.stringify({ message: 'keyUpBackward', type: 'input', state: 'up' }))
 			ws.send(JSON.stringify({ message: 'keyUpLeft', type: 'input', state: 'up' }))
 			ws.send(JSON.stringify({ message: 'keyUpRight', type: 'input', state: 'up' }))
+
+			keyStates.forward = false
+			keyStates.backward = false
+			keyStates.left = false
+			keyStates.right = false
+
 			clearInterval(inter)
 			console.log(data)
 		})
