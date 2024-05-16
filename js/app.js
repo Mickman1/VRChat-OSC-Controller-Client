@@ -40,12 +40,11 @@ const keyUpInputMap = {
 	ArrowRight: { input: 'keyUpLookRight', 		state: 'lookRight' },
 }
 
-var ws = new WebSocket('wss://mickbot.com/ws')
+const ws = new WebSocket('wss://mickbot.com/ws')
 
 document.getElementById('message-box').addEventListener('keydown', function(event) {
-	if (event.code === 'Enter') {
+	if (event.code === 'Enter')
 		sendChatboxMessage(event)
-	}
 })
 
 document.addEventListener('keydown', function(event) {
@@ -73,7 +72,7 @@ document.addEventListener('keyup', function(event) {
 })
 
 function sendChatboxMessage() {
-	if (document.getElementById('message-box').value === '') 
+	if (document.getElementById('message-box').value === '')
 		return;
 
 	const message = document.getElementById('message-box').value
