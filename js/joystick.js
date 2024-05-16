@@ -6,14 +6,14 @@ const joystickInput = {
 	sprint: { state: false, lastState: false },
 }
 
-const options = {
+const joystickOptions = {
 	zone: document.getElementById('joystick-div'),
 	color: 'red',
 	size: 150,
 }
-const manager = nipplejs.create(options)
+const joystickManager = nipplejs.create(joystickOptions)
 
-manager.on('move', (evt, data) => {
+joystickManager.on('move', (evt, data) => {
 	const degree = data.angle.degree
 
 	if (data.distance < 10)
@@ -35,6 +35,7 @@ manager.on('move', (evt, data) => {
 	joystickInput.sprint.lastState = joystickInput.sprint.state
 
 	// Determine quadrant (For right, account for 0 / 360 degree math)
+	// 110° per quadrant, 20° for diagonal overlap
 	joystickInput.forward.state = (degree < 145 && degree > 35 && data.distance > 15)
 	joystickInput.backward.state = (degree < 325 && degree > 215 && data.distance > 15)
 	joystickInput.left.state = (degree < 235 && degree > 125 && data.distance > 15)
@@ -68,7 +69,7 @@ manager.on('move', (evt, data) => {
 	joystickInput.right.lastState = joystickInput.right.state
 })
 
-manager.on('end', (evt, data) => {
+joystickManager.on('end', (evt, data) => {
 	ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
 
 	joystickInput.forward.state = false
