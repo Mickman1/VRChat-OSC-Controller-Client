@@ -43,8 +43,11 @@ const keyUpInputMap = {
 const ws = new WebSocket('wss://mickbot.com/ws')
 
 document.getElementById('message-box').addEventListener('keydown', function(event) {
-	if (event.code === 'Enter')
+	// Prevent newline by default in <textarea>
+	if (event.code === 'Enter') {
+		event.preventDefault()
 		sendChatboxMessage(event)
+	}
 })
 
 document.addEventListener('keydown', function(event) {

@@ -1,3 +1,11 @@
+#message-box {
+	width: 600px;
+	height: 80px;
+	font-family: Arial;
+	font-size: larger;
+	resize: none;
+}
+
 #joystick-div {
 	position: absolute;
 	top: 40px;
