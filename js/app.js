@@ -40,7 +40,11 @@ const keyUpInputMap = {
 	ArrowRight: { input: 'keyUpLookRight', 		state: 'lookRight' },
 }
 
-const ws = new WebSocket('wss://mickbot.com/ws')
+let ws = new WebSocket('wss://mickbot.com/ws')
+
+ws.onclose = function() {
+	reconnectWebSocket()
+}
 
 document.getElementById('message-box').addEventListener('keydown', function(event) {
 	// Prevent newline by default in <textarea>
@@ -86,8 +90,12 @@ function sendChatboxMessage() {
 
 function checkWebSocketConnection() {
 	if (ws.readyState !== WebSocket.OPEN) {
-		ws = new WebSocket('wss://mickbot.com/ws')
-
-		console.log('WebSocket was CLOSED, re-opening...')
+		reconnectWebSocket()
 	}
+}
+
+function reconnectWebSocket() {
+	console.log('WebSocket was CLOSED, re-opening...')
+
+	ws = new WebSocket('wss://mickbot.com/ws')
 }
