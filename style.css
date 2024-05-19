@@ -8,8 +8,8 @@
 
 #joystick-div {
 	position: absolute;
-	top: 40px;
-	width: 600px;
+	top: 100px;
+	width: 400px;
 	height: 400px;
 	outline: auto;
 }
