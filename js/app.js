@@ -46,6 +46,15 @@ ws.onclose = function() {
 	reconnectWebSocket()
 }
 
+let pingInterval
+ws.onopen = function() {
+	console.log('WebSocket OPENED')
+
+	pingInterval = setInterval(function() {
+		ping()
+	}, 5000)
+}
+
 document.getElementById('message-box').addEventListener('keydown', function(event) {
 	// Prevent newline by default in <textarea>
 	if (event.code === 'Enter') {
@@ -98,4 +107,8 @@ function reconnectWebSocket() {
 	console.log('WebSocket was CLOSED, re-opening...')
 
 	ws = new WebSocket('wss://mickbot.com/ws')
+}
+
+function ping() {
+	ws.send(JSON.stringify({ message: 'ping', type: 'ping' }))
 }
