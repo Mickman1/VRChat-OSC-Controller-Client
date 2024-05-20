@@ -13,8 +13,10 @@
 </head>
 
 <body onblur='checkWebSocketConnection()' onfocus='checkWebSocketConnection()'>
-	<textarea id='message-box' maxlength='144' placeholder='Enter message'></textarea>
-	<button id='send-btn' onclick='sendChatboxMessage()'>Send</button>
+	<div id='chatbox-div'>
+		<textarea id='message-box' maxlength='144' placeholder='Enter message'></textarea>
+		<button id='send-btn' onclick='sendChatboxMessage()'>Send</button>
+	</div>
 	
 	<div id='joystick-div'></div>
 </body>

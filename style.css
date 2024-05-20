@@ -4,6 +4,12 @@
 	font-family: Arial;
 	font-size: larger;
 	resize: none;
+	float: left;
+}
+
+#send-btn {
+	width: 80px;
+	height: 85px;
 }
 
 #joystick-div {
