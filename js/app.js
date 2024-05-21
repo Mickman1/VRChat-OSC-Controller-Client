@@ -39,6 +39,7 @@ document.addEventListener('keydown', function(event) {
 
 	let key = event.code
 
+	// Don't spam WebSocket / OSC with duplicate commands
 	if (inputMap[key] && inputMap[key].state === false) {
 		let command = `keyDown${inputMap[key].command}`
 		inputMap[key].state = true
@@ -53,6 +54,7 @@ document.addEventListener('keyup', function(event) {
 
 	let key = event.code
 
+	// Don't spam WebSocket / OSC with duplicate commands
 	if (inputMap[key] && inputMap[key].state === true) {
 		let command = `keyUp${inputMap[key].command}`
 		inputMap[key].state = false
