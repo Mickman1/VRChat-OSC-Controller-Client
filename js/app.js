@@ -55,17 +55,16 @@ ws.onopen = function() {
 	}, 5000)
 }
 
-document.getElementById('message-box').addEventListener('keydown', function(event) {
-	// Prevent newline by default in <textarea>
-	if (event.code === 'Enter') {
-		event.preventDefault()
-		sendChatboxMessage(event)
-	}
-})
-
 document.addEventListener('keydown', function(event) {
-	if (document.activeElement === document.getElementById('message-box'))
+	if (event.target === document.getElementById('message-box')) {
+		if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+			// Prevent newline by default in <textarea>
+			event.preventDefault()
+			sendChatboxMessage()
+		}
+
 		return;
+	}
 
 	if (keyDownInputMap[event.code] && keyStates[keyDownInputMap[event.code].state] === false) {
 		let message = keyDownInputMap[event.code].input
@@ -88,11 +87,12 @@ document.addEventListener('keyup', function(event) {
 })
 
 function sendChatboxMessage() {
-	if (document.getElementById('message-box').value === '')
+	const chatboxMessage = document.getElementById('message-box').value
+
+	if (chatboxMessage === '')
 		return;
 
-	const message = document.getElementById('message-box').value
-	ws.send(JSON.stringify({ message: message, type: 'chatbox' }))
+	ws.send(JSON.stringify({ chatboxMessage: chatboxMessage, type: 'chatbox' }))
 
 	document.getElementById('message-box').value = ''
 }
