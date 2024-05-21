@@ -1,43 +1,14 @@
-const keyStates = {
-	forward: false,
-	backward: false,
-	left: false,
-	right: false,
-	sprint: false,
-	jump: false,
-	crouch: false,
-	prone: false,
-	voice: false,
-	lookLeft: false,
-	lookRight: false,
-}
-
-const keyDownInputMap = {
-	KeyW: 			{ input: 'keyDownForward', 		state: 'forward' },
-	KeyS: 			{ input: 'keyDownBackward', 	state: 'backward' },
-	KeyA: 			{ input: 'keyDownLeft', 			state: 'left'},
-	KeyD: 			{ input: 'keyDownRight', 			state: 'right' },
-	ShiftLeft: 	{ input: 'keyDownSprint', 		state: 'sprint' },
-	Space: 			{ input: 'keyDownJump', 			state: 'jump' },
-	KeyC: 			{ input: 'keyDownCrouch', 		state: 'crouch' },
-	KeyZ: 			{ input: 'keyDownProne', 			state: 'prone' },
-	KeyV: 			{ input: 'keyDownVoice', 			state: 'voice' },
-	ArrowLeft: 	{ input: 'keyDownLookLeft', 	state: 'lookLeft' },
-	ArrowRight: { input: 'keyDownLookRight', 	state: 'lookRight' },
-}
-
-const keyUpInputMap = {
-	KeyW: 			{ input: 'keyUpForward', 			state: 'forward' },
-	KeyS: 			{ input: 'keyUpBackward', 		state: 'backward' },
-	KeyA: 			{ input: 'keyUpLeft', 				state: 'left' },
-	KeyD: 			{ input: 'keyUpRight', 				state: 'right' },
-	ShiftLeft: 	{ input: 'keyUpSprint', 			state: 'sprint' },
-	Space: 			{ input: 'keyUpJump', 				state: 'jump' },
-	KeyC: 			{ input: 'keyUpCrouch', 			state: 'crouch' },
-	KeyZ: 			{ input: 'keyUpProne', 				state: 'prone' },
-	KeyV: 			{ input: 'keyUpVoice', 				state: 'voice' },
-	ArrowLeft: 	{ input: 'keyUpLookLeft', 		state: 'lookLeft' },
-	ArrowRight: { input: 'keyUpLookRight', 		state: 'lookRight' },
+const inputMap = {
+	KeyW: 			{ command: 'Forward', 	state: false },
+	KeyS: 			{ command: 'Backward', 	state: false },
+	KeyA: 			{ command: 'Left', 			state: false },
+	KeyD: 			{ command: 'Right', 		state: false },
+	ShiftLeft: 	{ command: 'Sprint', 		state: false },
+	Space: 			{ command: 'Jump', 			state: false },
+	KeyJ: 			{ command: 'HoldFB', 		state: false },
+	KeyV: 			{ command: 'Voice', 		state: false },
+	ArrowLeft: 	{ command: 'LookLeft', 	state: false },
+	ArrowRight: { command: 'LookRight', state: false },
 }
 
 let ws = new WebSocket('wss://mickbot.com/ws')
@@ -66,11 +37,13 @@ document.addEventListener('keydown', function(event) {
 		return;
 	}
 
-	if (keyDownInputMap[event.code] && keyStates[keyDownInputMap[event.code].state] === false) {
-		let message = keyDownInputMap[event.code].input
-		keyStates[keyDownInputMap[event.code].state] = true
+	let key = event.code
 
-		ws.send(JSON.stringify({ message: message, type: 'input', state: 'down' }))
+	if (inputMap[key] && inputMap[key].state === false) {
+		let command = `keyDown${inputMap[key].command}`
+		inputMap[key].state = true
+
+		ws.send(JSON.stringify({ command: command, type: 'input', state: 'down' }))
 	}
 })
 
@@ -78,11 +51,13 @@ document.addEventListener('keyup', function(event) {
 	if (document.activeElement === document.getElementById('message-box'))
 		return;
 
-	if (keyUpInputMap[event.code] && keyStates[keyUpInputMap[event.code].state] === true) {
-		let message = keyUpInputMap[event.code].input
-		keyStates[keyUpInputMap[event.code].state] = false
+	let key = event.code
+
+	if (inputMap[key] && inputMap[key].state === true) {
+		let command = `keyUp${inputMap[key].command}`
+		inputMap[key].state = false
 		
-		ws.send(JSON.stringify({ message: message, type: 'input', state: 'up' }))
+		ws.send(JSON.stringify({ command: command, type: 'input', state: 'up' }))
 	}
 })
 

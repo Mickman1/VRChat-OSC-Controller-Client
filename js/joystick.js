@@ -1,9 +1,9 @@
-const joystickInput = {
-	forward: { state: false, lastState: false },
+const joystickInputMap = {
+	forward: 	{ state: false, lastState: false },
 	backward: { state: false, lastState: false },
-	left: { state: false, lastState: false },
-	right: { state: false, lastState: false },
-	sprint: { state: false, lastState: false },
+	left: 		{ state: false, lastState: false },
+	right: 		{ state: false, lastState: false },
+	sprint: 	{ state: false, lastState: false },
 }
 
 const joystickOptions = {
@@ -21,64 +21,64 @@ joystickManager.on('move', (evt, data) => {
 
 	// Sprint
 	if (data.distance > 55) {
-		joystickInput.sprint.state = true
+		joystickInputMap.sprint.state = true
 
-		if (!joystickInput.sprint.lastState)
-			ws.send(JSON.stringify({ message: 'keyDownSprint', type: 'input', state: 'down' }))
+		if (!joystickInputMap.sprint.lastState)
+			ws.send(JSON.stringify({ command: 'keyDownSprint', type: 'input', state: 'down' }))
 	}
 	else {
-		joystickInput.sprint.state = false
+		joystickInputMap.sprint.state = false
 
-		if (joystickInput.sprint.lastState)
-			ws.send(JSON.stringify({ message: 'keyUpSprint', type: 'input', state: 'up' }))
+		if (joystickInputMap.sprint.lastState)
+			ws.send(JSON.stringify({ command: 'keyUpSprint', type: 'input', state: 'up' }))
 	}
-	joystickInput.sprint.lastState = joystickInput.sprint.state
+	joystickInputMap.sprint.lastState = joystickInputMap.sprint.state
 
 	// Determine quadrant (For right, account for 0 / 360 degree math)
 	// 110° per quadrant, 20° for diagonal overlap
-	joystickInput.forward.state = (degree < 145 && degree > 35 && data.distance > 15)
-	joystickInput.backward.state = (degree < 325 && degree > 215 && data.distance > 15)
-	joystickInput.left.state = (degree < 235 && degree > 125 && data.distance > 15)
-	joystickInput.right.state = ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0) && data.distance > 15)
+	joystickInputMap.forward.state = (degree < 145 && degree > 35 && data.distance > 15)
+	joystickInputMap.backward.state = (degree < 325 && degree > 215 && data.distance > 15)
+	joystickInputMap.left.state = (degree < 235 && degree > 125 && data.distance > 15)
+	joystickInputMap.right.state = ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0) && data.distance > 15)
 
 	const keyDownMessages = [
-		{ state: joystickInput.forward.state, lastState: joystickInput.forward.lastState, message: 'keyDownForward' },
-		{ state: joystickInput.backward.state, lastState: joystickInput.backward.lastState, message: 'keyDownBackward' },
-		{ state: joystickInput.left.state, lastState: joystickInput.left.lastState, message: 'keyDownLeft' },
-		{ state: joystickInput.right.state, lastState: joystickInput.right.lastState, message: 'keyDownRight' }
+		{ command: 'keyDownForward', 	state: joystickInputMap.forward.state, 	lastState: joystickInputMap.forward.lastState },
+		{ command: 'keyDownBackward', state: joystickInputMap.backward.state, lastState: joystickInputMap.backward.lastState },
+		{ command: 'keyDownLeft', 		state: joystickInputMap.left.state, 		lastState: joystickInputMap.left.lastState },
+		{ command: 'keyDownRight', 		state: joystickInputMap.right.state, 		lastState: joystickInputMap.right.lastState }
 	]
 	const keyUpMessages = [
-		{ state: joystickInput.forward.state, lastState: joystickInput.forward.lastState, message: 'keyUpForward' },
-		{ state: joystickInput.backward.state, lastState: joystickInput.backward.lastState, message: 'keyUpBackward' },
-		{ state: joystickInput.left.state, lastState: joystickInput.left.lastState, message: 'keyUpLeft' },
-		{ state: joystickInput.right.state, lastState: joystickInput.right.lastState, message: 'keyUpRight' }
+		{ command: 'keyUpForward', 		state: joystickInputMap.forward.state, 	lastState: joystickInputMap.forward.lastState },
+		{ command: 'keyUpBackward', 	state: joystickInputMap.backward.state, lastState: joystickInputMap.backward.lastState },
+		{ command: 'keyUpLeft', 			state: joystickInputMap.left.state, 		lastState: joystickInputMap.left.lastState },
+		{ command: 'keyUpRight', 			state: joystickInputMap.right.state, 		lastState: joystickInputMap.right.lastState }
 	]
 
-	keyDownMessages.forEach(({ state, lastState, message }) => {
+	keyDownMessages.forEach(({ state, lastState, command }) => {
 		if (state && !lastState)
-			ws.send(JSON.stringify({ message, type: 'input', state: 'down' }))
+			ws.send(JSON.stringify({ command: command, type: 'input', state: 'down' }))
 	})
-	keyUpMessages.forEach(({ state, lastState, message }) => {
+	keyUpMessages.forEach(({ state, lastState, command }) => {
 		if (!state && lastState)
-			ws.send(JSON.stringify({ message, type: 'input', state: 'up' }))
+			ws.send(JSON.stringify({ command: command, type: 'input', state: 'up' }))
 	})
 
-	joystickInput.forward.lastState = joystickInput.forward.state
-	joystickInput.backward.lastState = joystickInput.backward.state
-	joystickInput.left.lastState = joystickInput.left.state
-	joystickInput.right.lastState = joystickInput.right.state
+	joystickInputMap.forward.lastState = joystickInputMap.forward.state
+	joystickInputMap.backward.lastState = joystickInputMap.backward.state
+	joystickInputMap.left.lastState = joystickInputMap.left.state
+	joystickInputMap.right.lastState = joystickInputMap.right.state
 })
 
 joystickManager.on('end', (evt, data) => {
-	ws.send(JSON.stringify({ message: 'keyUpAll', type: 'input', state: 'up' }))
+	ws.send(JSON.stringify({ command: 'keyUpAll', type: 'input', state: 'up' }))
 
-	joystickInput.forward.state = false
-	joystickInput.backward.state = false
-	joystickInput.left.state = false
-	joystickInput.right.state = false
+	joystickInputMap.forward.state = false
+	joystickInputMap.backward.state = false
+	joystickInputMap.left.state = false
+	joystickInputMap.right.state = false
 
-	joystickInput.forward.lastState = false
-	joystickInput.backward.lastState = false
-	joystickInput.left.lastState = false
-	joystickInput.right.lastState = false
+	joystickInputMap.forward.lastState = false
+	joystickInputMap.backward.lastState = false
+	joystickInputMap.left.lastState = false
+	joystickInputMap.right.lastState = false
 })
