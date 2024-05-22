@@ -36,10 +36,10 @@ joystickManager.on('move', (evt, data) => {
 
 	// Determine quadrant (For right, account for 0 / 360 degree math)
 	// 110° per quadrant, 20° for diagonal overlap
-	joystickInputMap.forward.state = (degree < 145 && degree > 35 && data.distance > 15)
+	joystickInputMap.forward.state = 	(degree < 145 && degree > 35 && data.distance > 15)
 	joystickInputMap.backward.state = (degree < 325 && degree > 215 && data.distance > 15)
-	joystickInputMap.left.state = (degree < 235 && degree > 125 && data.distance > 15)
-	joystickInputMap.right.state = ((degree < 360 && degree > 305) || (degree < 55 && degree >= 0) && data.distance > 15)
+	joystickInputMap.left.state = 		(degree < 235 && degree > 125 && data.distance > 15)
+	joystickInputMap.right.state = 		((degree < 360 && degree > 305) || (degree < 55 && degree >= 0) && data.distance > 15)
 
 	const keyDownMessages = [
 		{ command: 'keyDownForward', 	state: joystickInputMap.forward.state, 	lastState: joystickInputMap.forward.lastState },
