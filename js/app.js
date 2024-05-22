@@ -32,7 +32,13 @@ ws.onopen = function() {
 	}, 5000)
 }
 
+document.addEventListener('click', function(event) {
+	if (event.target === document.getElementById('send-btn'))
+		sendChatboxMessage()
+})
+
 document.addEventListener('keydown', function(event) {
+	// Chatbox input
 	if (event.target === document.getElementById('message-box')) {
 		if (event.code === 'Enter' || event.code === 'NumpadEnter') {
 			// Prevent newline by default in <textarea>
