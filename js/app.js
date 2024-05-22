@@ -14,6 +14,7 @@ const inputMap = {
 let ws = new WebSocket('wss://mickbot.com/ws')
 
 ws.onclose = function() {
+	clearInterval(pingInterval)
 	reconnectWebSocket()
 }
 
