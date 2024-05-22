@@ -87,9 +87,8 @@ function sendChatboxMessage() {
 }
 
 function checkWebSocketConnection() {
-	if (ws.readyState !== WebSocket.OPEN) {
+	if (ws.readyState === WebSocket.CLOSED)
 		reconnectWebSocket()
-	}
 }
 
 function reconnectWebSocket() {
