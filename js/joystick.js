@@ -82,3 +82,19 @@ movementJoystickManager.on('end', (evt, data) => {
 	movementJoystickInputMap.left.lastState = false
 	movementJoystickInputMap.right.lastState = false
 })
+
+const cameraJoystickOptions = {
+	zone: document.getElementById('camera-joystick-div'),
+	color: 'red',
+	size: 150,
+	lockX: true,
+}
+const cameraJoystickManager = nipplejs.create(cameraJoystickOptions)
+
+cameraJoystickManager.on('move', (evt, data) => {
+	ws.send(JSON.stringify({ command: 'joystickHorizontal', type: 'input', value: data.vector.x }))
+})
+
+cameraJoystickManager.on('end', (evt, data) => {
+	ws.send(JSON.stringify({ command: 'joystickHorizontal', type: 'input', value: 0 }))
+})

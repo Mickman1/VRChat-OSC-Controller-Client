@@ -19,3 +19,12 @@
 	height: 400px;
 	outline: auto;
 }
+
+#camera-joystick-div {
+	position: absolute;
+	top: 100px;
+	left: 412px;
+	width: 400px;
+	height: 400px;
+	outline: auto;
+}
