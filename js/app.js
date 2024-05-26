@@ -37,6 +37,12 @@ document.addEventListener('click', function(event) {
 		sendChatboxMessage()
 })
 
+document.addEventListener('wheel', function(event) {
+	let command = event.deltaY > 0 ? 'keyDownScrollDown' : 'keyDownScrollUp'
+
+	ws.send(JSON.stringify({ command: command, type: 'input', state: 'down' }))
+})
+
 document.addEventListener('keydown', function(event) {
 	// Chatbox input
 	if (event.target === document.getElementById('message-box')) {
