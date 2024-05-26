@@ -24,13 +24,13 @@ movementJoystickManager.on('move', (evt, data) => {
 		movementJoystickInputMap.sprint.state = true
 
 		if (!movementJoystickInputMap.sprint.lastState)
-			ws.send(JSON.stringify({ command: 'keyDownSprint', type: 'input', state: 'down' }))
+			ws.send(JSON.stringify({ command: 'keyDownRun', type: 'input', state: 'down' }))
 	}
 	else {
 		movementJoystickInputMap.sprint.state = false
 
 		if (movementJoystickInputMap.sprint.lastState)
-			ws.send(JSON.stringify({ command: 'keyUpSprint', type: 'input', state: 'up' }))
+			ws.send(JSON.stringify({ command: 'keyUpRun', type: 'input', state: 'up' }))
 	}
 	movementJoystickInputMap.sprint.lastState = movementJoystickInputMap.sprint.state
 
@@ -42,16 +42,16 @@ movementJoystickManager.on('move', (evt, data) => {
 	movementJoystickInputMap.right.state = 		((degree < 360 && degree > 305) || (degree < 55 && degree >= 0) && data.distance > 15)
 
 	const keyDownMessages = [
-		{ command: 'keyDownForward', 	state: movementJoystickInputMap.forward.state, 	lastState: movementJoystickInputMap.forward.lastState },
-		{ command: 'keyDownBackward', state: movementJoystickInputMap.backward.state, lastState: movementJoystickInputMap.backward.lastState },
-		{ command: 'keyDownLeft', 		state: movementJoystickInputMap.left.state, 		lastState: movementJoystickInputMap.left.lastState },
-		{ command: 'keyDownRight', 		state: movementJoystickInputMap.right.state, 		lastState: movementJoystickInputMap.right.lastState }
+		{ command: 'keyDownMoveForward', 	state: movementJoystickInputMap.forward.state, 	lastState: movementJoystickInputMap.forward.lastState },
+		{ command: 'keyDownMoveBackward', state: movementJoystickInputMap.backward.state, lastState: movementJoystickInputMap.backward.lastState },
+		{ command: 'keyDownMoveLeft', 		state: movementJoystickInputMap.left.state, 		lastState: movementJoystickInputMap.left.lastState },
+		{ command: 'keyDownMoveRight', 		state: movementJoystickInputMap.right.state, 		lastState: movementJoystickInputMap.right.lastState }
 	]
 	const keyUpMessages = [
-		{ command: 'keyUpForward', 		state: movementJoystickInputMap.forward.state, 	lastState: movementJoystickInputMap.forward.lastState },
-		{ command: 'keyUpBackward', 	state: movementJoystickInputMap.backward.state, lastState: movementJoystickInputMap.backward.lastState },
-		{ command: 'keyUpLeft', 			state: movementJoystickInputMap.left.state, 		lastState: movementJoystickInputMap.left.lastState },
-		{ command: 'keyUpRight', 			state: movementJoystickInputMap.right.state, 		lastState: movementJoystickInputMap.right.lastState }
+		{ command: 'keyUpMoveForward', 		state: movementJoystickInputMap.forward.state, 	lastState: movementJoystickInputMap.forward.lastState },
+		{ command: 'keyUpMoveBackward', 	state: movementJoystickInputMap.backward.state, lastState: movementJoystickInputMap.backward.lastState },
+		{ command: 'keyUpMoveLeft', 			state: movementJoystickInputMap.left.state, 		lastState: movementJoystickInputMap.left.lastState },
+		{ command: 'keyUpMoveRight', 			state: movementJoystickInputMap.right.state, 		lastState: movementJoystickInputMap.right.lastState }
 	]
 
 	keyDownMessages.forEach(({ state, lastState, command }) => {

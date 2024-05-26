@@ -1,9 +1,9 @@
 const inputMap = {
-	KeyW: 			{ command: 'Forward', 			state: false },
-	KeyS: 			{ command: 'Backward', 			state: false },
-	KeyA: 			{ command: 'Left', 					state: false },
-	KeyD: 			{ command: 'Right', 				state: false },
-	ShiftLeft: 	{ command: 'Sprint', 				state: false },
+	KeyW: 			{ command: 'MoveForward', 	state: false },
+	KeyS: 			{ command: 'MoveBackward', 	state: false },
+	KeyA: 			{ command: 'MoveLeft', 			state: false },
+	KeyD: 			{ command: 'MoveRight', 		state: false },
+	ShiftLeft: 	{ command: 'Run', 					state: false },
 	Space: 			{ command: 'Jump', 					state: false },
 	KeyJ: 			{ command: 'SpinHoldLeft', 	state: false },
 	KeyL: 			{ command: 'SpinHoldRight', state: false },
@@ -38,7 +38,7 @@ document.addEventListener('click', function(event) {
 })
 
 document.addEventListener('wheel', function(event) {
-	let command = event.deltaY > 0 ? 'keyDownScrollDown' : 'keyDownScrollUp'
+	let command = event.deltaY > 0 ? 'keyDownMoveHoldBackward' : 'keyDownMoveHoldForward'
 
 	ws.send(JSON.stringify({ command: command, type: 'input', state: 'down' }))
 })
