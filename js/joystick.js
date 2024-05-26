@@ -10,6 +10,8 @@ const movementJoystickOptions = {
 	zone: document.getElementById('movement-joystick-div'),
 	color: 'red',
 	size: 150,
+	mode: 'semi',
+	catchDistance: 100,
 }
 const movementJoystickManager = nipplejs.create(movementJoystickOptions)
 
@@ -86,8 +88,10 @@ movementJoystickManager.on('end', (evt, data) => {
 const cameraJoystickOptions = {
 	zone: document.getElementById('camera-joystick-div'),
 	color: 'red',
-	size: 150,
+	size: 200,
 	lockX: true,
+	mode: 'semi',
+	catchDistance: 100,
 }
 const cameraJoystickManager = nipplejs.create(cameraJoystickOptions)
 
