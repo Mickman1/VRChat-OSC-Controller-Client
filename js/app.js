@@ -35,6 +35,13 @@ ws.onopen = function() {
 document.addEventListener('click', function(event) {
 	if (event.target === document.getElementById('send-btn'))
 		sendChatboxMessage()
+
+	if (event.target === document.getElementById('jump-btn')) {
+		ws.send(JSON.stringify({ command: 'keyDownJump', type: 'input', state: 'down' }))
+		setTimeout(() => {
+			ws.send(JSON.stringify({ command: 'keyUpJump', type: 'input', state: 'up' }))
+		}, 30)
+	}
 })
 
 document.addEventListener('wheel', function(event) {

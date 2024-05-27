@@ -12,6 +12,11 @@
 	height: 85px;
 }
 
+#jump-btn {
+	width: 80px;
+	height: 85px;
+}
+
 #movement-joystick-div {
 	position: absolute;
 	top: 100px;
