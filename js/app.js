@@ -83,7 +83,7 @@ document.addEventListener('keyup', function(event) {
 	if (inputMap[key] && inputMap[key].state === true) {
 		let command = `keyUp${inputMap[key].command}`
 		inputMap[key].state = false
-		
+
 		ws.send(JSON.stringify({ command: command, type: 'input', state: 'up' }))
 	}
 })
